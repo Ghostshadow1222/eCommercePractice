@@ -1,6 +1,7 @@
 ﻿using eCommercePractice.Data;
 using eCommercePractice.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace eCommercePractice.Controllers;
 
@@ -13,9 +14,10 @@ public class ProductController : Controller
         _context = context;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        List<Product> allProducts = await _context.Products.ToListAsync(); // Retrieve all products from the database
+        return View(allProducts);
     }
 
     [HttpGet]
