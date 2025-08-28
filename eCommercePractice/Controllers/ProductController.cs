@@ -34,6 +34,9 @@ public class ProductController : Controller
             _context.Products.Add(p);          // Add the new product to the context
             await _context.SaveChangesAsync(); // Save changes to the database
 
+            // TempData is used to pass data and will persist over a redirect
+            TempData["Message"] = $"{p.Title} was created successfully!"; // Store a success message in TempData
+
             return RedirectToAction(nameof(Index)); // Redirect to the Index action after successful creation
         }
         return View(p); // If the model state is invalid, return the same view with the product data to show validation errors
