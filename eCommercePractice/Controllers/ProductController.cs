@@ -70,7 +70,8 @@ public class ProductController : Controller
         return View(product);
     }
 
-    public IActionResult Delete(int id)
+    [HttpGet]
+    public async Task<IActionResult> Delete(int id)
     {
         // If user tried to go to the delete page without going through our website
         if (id <= 0)
@@ -78,7 +79,7 @@ public class ProductController : Controller
             return BadRequest(); // Return a 400 Bad Request response if the id is invalid
         }
 
-        Product? product = _context.Products.Where(p => p.ProductId == id).FirstOrDefault();
+        Product? product = await _context.Products.Where(p => p.ProductId == id).FirstOrDefaultAsync();
 
         if (product == null)
         {
@@ -92,7 +93,7 @@ public class ProductController : Controller
     [HttpPost]
     public async Task<IActionResult> DeleteConfrimed(int id)
     {
-        Product? product = _context.Products.Where(p => p.ProductId == id).FirstOrDefault();
+        Product? product = await _context.Products.Where(p => p.ProductId == id).FirstOrDefaultAsync();
 
         if (product == null)
         {
