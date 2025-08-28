@@ -43,9 +43,9 @@ public class ProductController : Controller
     }
 
     [HttpGet]
-    public IActionResult Edit(int id)
+    public async Task<IActionResult> Edit(int id)
     {
-        Product? product = _context.Products.Where(p => p.ProductId == id).FirstOrDefault();
+        Product? product = await _context.Products.Where(p => p.ProductId == id).FirstOrDefaultAsync();
 
         if (product == null)
         {
@@ -68,5 +68,43 @@ public class ProductController : Controller
             return RedirectToAction(nameof(Index));
         }
         return View(product);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Delete(int id)
+    {
+        // If user tried to go to the delete page without going through our website
+        if (id <= 0)
+        {
+            return BadRequest(); // Return a 400 Bad Request response if the id is invalid
+        }
+
+        Product? product = await _context.Products.Where(p => p.ProductId == id).FirstOrDefaultAsync();
+
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        return View(product);
+    }
+
+    [ActionName("Delete")]
+    [HttpPost]
+    public async Task<IActionResult> DeleteConfrimed(int id)
+    {
+        Product? product = await _context.Products.Where(p => p.ProductId == id).FirstOrDefaultAsync();
+
+        if (product == null)
+        {
+            return RedirectToAction(nameof(Index));
+        }
+
+        _context.Remove(product);
+        await _context.SaveChangesAsync();
+
+        TempData["Message"] = $"{product.Title} was deleted successfully!";
+
+        return RedirectToAction(nameof(Index));
     }
 }
