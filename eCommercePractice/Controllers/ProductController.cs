@@ -69,4 +69,22 @@ public class ProductController : Controller
         }
         return View(product);
     }
+
+    public IActionResult Delete(int id)
+    {
+        // If user tried to go to the delete page without going through our website
+        if (id <= 0)
+        {
+            return BadRequest(); // Return a 400 Bad Request response if the id is invalid
+        }
+
+        Product? product = _context.Products.Where(p => p.ProductId == id).FirstOrDefault();
+
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        return View(product);
+    }
 }
