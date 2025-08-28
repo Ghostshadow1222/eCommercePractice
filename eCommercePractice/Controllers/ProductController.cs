@@ -1,6 +1,7 @@
 ﻿using eCommercePractice.Data;
 using eCommercePractice.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace eCommercePractice.Controllers;
 
@@ -13,9 +14,10 @@ public class ProductController : Controller
         _context = context;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        List<Product> allProducts = await _context.Products.ToListAsync(); // Retrieve all products from the database
+        return View(allProducts);
     }
 
     [HttpGet]
@@ -31,6 +33,9 @@ public class ProductController : Controller
         {
             _context.Products.Add(p);          // Add the new product to the context
             await _context.SaveChangesAsync(); // Save changes to the database
+
+            // TempData is used to pass data and will persist over a redirect
+            TempData["Message"] = $"{p.Title} was created successfully!"; // Store a success message in TempData
 
             return RedirectToAction(nameof(Index)); // Redirect to the Index action after successful creation
         }

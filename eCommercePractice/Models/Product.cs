@@ -23,5 +23,6 @@ public class Product
     /// The current sales price of the product
     /// </summary>
     [Range(0, 10_000, ErrorMessage = "Price must be between 0 and 10,000")]
+    [DataType(DataType.Currency)]
     public double Price { get; set; }
 }
