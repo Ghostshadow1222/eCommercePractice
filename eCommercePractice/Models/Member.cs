@@ -19,6 +19,7 @@ public class Member
     /// </summary>
     [RegularExpression("^[a-zA-Z0-9]+$", ErrorMessage = "Username can only contain alphanumeric characters (letters and numbers only).")]
     [StringLength(25, ErrorMessage = "Your username cannot be more than 25 characters")]
+
     public required string Username { get; set; }
 
     /// <summary>
@@ -36,7 +37,6 @@ public class Member
     /// <summary>
     /// The date when the member was born
     /// </summary>
-
     public DateOnly DateOfBirth { get; set; }
 
 
