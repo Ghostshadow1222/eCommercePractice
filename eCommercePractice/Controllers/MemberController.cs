@@ -1,0 +1,80 @@
+﻿using eCommercePractice.Data;
+using eCommercePractice.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace eCommercePractice.Controllers;
+
+public class MemberController : Controller
+{
+    private readonly ProductDBContext _context;
+
+    public MemberController(ProductDBContext context)
+    {
+        _context = context;
+    }
+
+    public IActionResult Register()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Register(RegistrationViewModel reg)
+    {
+        if (ModelState.IsValid)
+        {
+            // Map ViewModel to Member model tracked by DB
+            Member newMember = new()
+            {
+                Username = reg.Username,
+                Email = reg.Email,
+                Password = reg.Password,
+                DateOfBirth = reg.DateOfBirth,
+            };
+
+            _context.Members.Add(newMember);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
+        return View(reg);
+    }
+
+    [HttpGet]
+    public IActionResult Login()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Login(LoginViewModel login)
+    {
+        if (ModelState.IsValid)
+        {
+            // Check if the UsernameOrEmail and Password matches a record in the database
+            Member? loggedInMember = await _context.Members.Where(m => (m.Username == login.UsernameOrEmail || m.Email == login.UsernameOrEmail) && m.Password == login.Password)
+                .SingleOrDefaultAsync();
+
+            if (loggedInMember == null)
+            {
+                ModelState.AddModelError(string.Empty, "Your provided information does not match any in our records");
+                return View(login);
+            }
+
+            // Log the user in
+            HttpContext.Session.SetString("Username", loggedInMember.Username);
+            HttpContext.Session.SetInt32("MemberId", loggedInMember.MemberId);
+
+            return RedirectToAction("Index", "Home");
+        }
+        return View(login);
+    }
+
+    public IActionResult Logout()
+    {
+        // Destory current session
+        HttpContext.Session.Clear();
+        return RedirectToAction("Index", "Home");
+    }
+}
