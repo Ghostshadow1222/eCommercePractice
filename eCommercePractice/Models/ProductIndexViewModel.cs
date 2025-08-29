@@ -23,7 +23,7 @@ public class ProductIndexViewModel
     public int TotalPages { get; set; }
 
     /// <summary>
-    /// Total number of products
+    /// Total number of products (after filtering)
     /// </summary>
     public int TotalProducts { get; set; }
 
@@ -41,4 +41,19 @@ public class ProductIndexViewModel
     /// Indicates if there is a next page
     /// </summary>
     public bool HasNextPage => CurrentPage < TotalPages;
+
+    /// <summary>
+    /// Optional search term to filter by product title
+    /// </summary>
+    public string? SearchTerm { get; set; }
+
+    /// <summary>
+    /// Optional minimum price filter
+    /// </summary>
+    public double? MinPrice { get; set; }
+
+    /// <summary>
+    /// Optional maximum price filter
+    /// </summary>
+    public double? MaxPrice { get; set; }
 }
