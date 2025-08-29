@@ -8,16 +8,55 @@ namespace eCommercePractice.Controllers;
 public class ProductController : Controller
 {
     private readonly ProductDBContext _context;
+    
+    private const int ProductsPerPage = 3;
 
     public ProductController(ProductDBContext context)
     {
         _context = context;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int page = 1)
     {
-        List<Product> allProducts = await _context.Products.ToListAsync(); // Retrieve all products from the database
-        return View(allProducts);
+        // Ensure page is at least 1
+        if (page < 1)
+        {
+            page = 1;
+        }
+
+        // Get total count of products
+        int totalProducts = await _context.Products.CountAsync();
+
+        // Calculate total pages
+        int totalPagesNeeded = (int)Math.Ceiling((double)totalProducts / ProductsPerPage);
+
+        // Ensure page doesn't exceed total pages
+        if (page > totalPagesNeeded && totalPagesNeeded > 0)
+        {
+            page = totalPagesNeeded;
+        }
+
+        // Calculate skip amount for pagination
+        int skip = (page - 1) * ProductsPerPage;
+
+        // Get products for current page
+        List<Product> products = await _context.Products
+            .OrderBy(p => p.Title)
+            .Skip(skip)
+            .Take(ProductsPerPage)
+            .ToListAsync();
+
+        // Create view model with pagination data
+        ProductIndexViewModel productListViewModel = new()
+        {
+            Products = products,
+            CurrentPage = page,
+            TotalPages = totalPagesNeeded,
+            TotalProducts = totalProducts,
+            ProductsPerPage = ProductsPerPage
+        };
+
+        return View(productListViewModel);
     }
 
     [HttpGet]
