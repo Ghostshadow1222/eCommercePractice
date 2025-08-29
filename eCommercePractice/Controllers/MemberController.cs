@@ -24,6 +24,26 @@ public class MemberController : Controller
     {
         if (ModelState.IsValid)
         {
+            // Check if Username or Email already exists
+            bool usernameExists = await _context.Members.AnyAsync(m => m.Username == reg.Username);
+
+            if (usernameExists)
+            {
+                ModelState.AddModelError("Username", "The username is already taken. Please choose a different one.");
+            }
+            
+            bool emailExists = await _context.Members.AnyAsync(m => m.Email == reg.Email);
+
+            if (emailExists)
+            {
+                ModelState.AddModelError("Email", "The email is already registered. Please use a different email.");
+            }
+
+            if (usernameExists || emailExists)
+            {
+                return View(reg);
+            }
+
             // Map ViewModel to Member model tracked by DB
             Member newMember = new()
             {
