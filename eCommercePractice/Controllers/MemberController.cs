@@ -1,6 +1,7 @@
 ﻿using eCommercePractice.Data;
 using eCommercePractice.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace eCommercePractice.Controllers;
 
@@ -46,10 +47,25 @@ public class MemberController : Controller
         return View();
     }
 
-    /*
-    public async Task<IActionResult> Login()
+    [HttpPost]
+    public async Task<IActionResult> Login(LoginViewModel login)
     {
-        return View();
+        if (ModelState.IsValid)
+        {
+            // Check if the UsernameOrEmail and Password matches a record in the database
+            Member? loggedInMember = await _context.Members.Where(m => (m.Username == login.UsernameOrEmail || m.Email == login.UsernameOrEmail) && m.Password == login.Password)
+                .SingleOrDefaultAsync();
+
+            if (loggedInMember == null)
+            {
+                ModelState.AddModelError(string.Empty, "Your provided information does not match any in our records");
+                return View(login);
+            }
+
+            // Log user in??
+
+            return View("Index", "Home");
+        }
+        return View(login);
     }
-    */
 }
