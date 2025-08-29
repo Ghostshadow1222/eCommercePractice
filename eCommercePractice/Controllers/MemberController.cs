@@ -39,4 +39,17 @@ public class MemberController : Controller
 
         return View(reg);
     }
+
+    [HttpGet]
+    public IActionResult Login()
+    {
+        return View();
+    }
+
+    /*
+    public async Task<IActionResult> Login()
+    {
+        return View();
+    }
+    */
 }
