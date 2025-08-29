@@ -16,7 +16,7 @@ public class ProductController : Controller
         _context = context;
     }
 
-    public async Task<IActionResult> Index(int page = 1)
+    public async Task<IActionResult> Index(int page = 1, string? searchTerm = null, double? minPrice = null, double? maxPrice = null)
     {
         // Ensure page is at least 1
         if (page < 1)
@@ -24,8 +24,28 @@ public class ProductController : Controller
             page = 1;
         }
 
-        // Get total count of products
-        int totalProducts = await _context.Products.CountAsync();
+        // Base query
+        IQueryable<Product> query = _context.Products.AsNoTracking();
+
+        // Apply title filter
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            string term = searchTerm.Trim();
+            query = query.Where(p => p.Title.Contains(term));
+        }
+        
+        // Apply price filters
+        if (minPrice.HasValue)
+        {
+            query = query.Where(p => p.Price >= minPrice.Value);
+        }
+        if (maxPrice.HasValue)
+        {
+            query = query.Where(p => p.Price <= maxPrice.Value);
+        }
+
+        // Get total count of filtered products
+        int totalProducts = await query.CountAsync();
 
         // Calculate total pages
         int totalPagesNeeded = (int)Math.Ceiling((double)totalProducts / ProductsPerPage);
@@ -40,20 +60,23 @@ public class ProductController : Controller
         int skip = (page - 1) * ProductsPerPage;
 
         // Get products for current page
-        List<Product> products = await _context.Products
+        List<Product> products = await query
             .OrderBy(p => p.Title)
             .Skip(skip)
             .Take(ProductsPerPage)
             .ToListAsync();
 
-        // Create view model with pagination data
+        // Create view model with pagination and filter data
         ProductIndexViewModel productListViewModel = new()
         {
             Products = products,
             CurrentPage = page,
             TotalPages = totalPagesNeeded,
             TotalProducts = totalProducts,
-            ProductsPerPage = ProductsPerPage
+            ProductsPerPage = ProductsPerPage,
+            SearchTerm = searchTerm,
+            MinPrice = minPrice,
+            MaxPrice = maxPrice
         };
 
         return View(productListViewModel);
