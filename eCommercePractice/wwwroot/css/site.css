@@ -29,3 +29,112 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* Custom heading colors for light and dark modes */
+[data-bs-theme="light"] h1,
+[data-bs-theme="light"] h2,
+[data-bs-theme="light"] h3,
+[data-bs-theme="light"] h4,
+[data-bs-theme="light"] h5,
+[data-bs-theme="light"] h6 {
+    color: #20b2aa !important; /* Turquoise color for light mode */
+}
+
+[data-bs-theme="dark"] h1,
+[data-bs-theme="dark"] h2,
+[data-bs-theme="dark"] h3,
+[data-bs-theme="dark"] h4,
+[data-bs-theme="dark"] h5,
+[data-bs-theme="dark"] h6 {
+    color: #663399 !important; /* Royal purple color for dark mode */
+}
+
+/* Theme toggle button styling */
+#themeToggle {
+    border-radius: 20px;
+    padding: 0.375rem 0.75rem;
+    transition: all 0.2s ease-in-out;
+}
+
+#themeToggle:hover {
+    transform: scale(1.05);
+}
+
+#themeIcon {
+    margin-left: 0.25rem;
+    font-size: 1.1em;
+}
+
+/* Card styling for better appearance */
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+[data-bs-theme="dark"] .card {
+    box-shadow: 0 0.125rem 0.25rem rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Enhanced table styling */
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.075);
+    transition: background-color 0.15s ease-in-out;
+}
+
+[data-bs-theme="dark"] .table-hover tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.075);
+}
+
+/* Price badge styling */
+.badge.bg-success {
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+/* Button group styling for actions */
+.btn-group .btn {
+    border-radius: 0.375rem;
+    margin: 0 0.125rem;
+}
+
+.btn-group .btn:first-child {
+    margin-left: 0;
+}
+
+.btn-group .btn:last-child {
+    margin-right: 0;
+}
+
+/* Card header improvements */
+.card-header {
+    background-color: rgba(0, 0, 0, 0.03);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+[data-bs-theme="dark"] .card-header {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Table responsive improvements */
+.table-responsive {
+    border-radius: 0;
+}
+
+/* Empty state styling */
+.card-body .display-1 {
+    opacity: 0.3;
+}
+
+/* Pagination in card footer */
+.card-footer {
+    background-color: rgba(0, 0, 0, 0.03);
+    border-top: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+[data-bs-theme="dark"] .card-footer {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
