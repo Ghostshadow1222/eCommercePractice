@@ -9,7 +9,7 @@ public class ProductController : Controller
 {
     private readonly ProductDBContext _context;
     
-    private const int ProductsPerPage = 3;
+    private const int ProductsPerPage = 8;
 
     public ProductController(ProductDBContext context)
     {
